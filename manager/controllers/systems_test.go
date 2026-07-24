@@ -460,3 +460,13 @@ func TestMSSQLSystemMeta3(t *testing.T) {
 	assert.Equal(t, uuid.MustParse("00000000-0000-0000-0000-000000000006"), output.Data[0].ID)
 	assert.Equal(t, 2, output.Meta.TotalItems)
 }
+
+func TestSystemsFilterSatelliteManaged(t *testing.T) {
+	output := testSystems(t, `?filter[satellite_managed]=true`, 1)
+	assert.Equal(t, 0, len(output.Data))
+}
+
+func TestSystemsFilterNotSatelliteManaged(t *testing.T) {
+	output := testSystems(t, `?filter[satellite_managed]=false`, 1)
+	assert.Equal(t, 10, len(output.Data))
+}
