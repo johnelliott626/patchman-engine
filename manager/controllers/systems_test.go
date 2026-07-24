@@ -258,6 +258,22 @@ func TestSystemsFilterTemplateUUID(t *testing.T) {
 	}
 }
 
+func TestSystemsFilterTemplateUUIDNotNull(t *testing.T) {
+	output := testSystems(t, `?filter[template_uuid]=notnull`, 1)
+	assert.Equal(t, 3, len(output.Data))
+	for _, d := range output.Data {
+		assert.NotEmpty(t, d.Attributes.TemplateUUID)
+	}
+}
+
+func TestSystemsFilterTemplateUUIDNull(t *testing.T) {
+	output := testSystems(t, `?filter[template_uuid]=null`, 1)
+	assert.Equal(t, 7, len(output.Data))
+	for _, d := range output.Data {
+		assert.Empty(t, d.Attributes.TemplateUUID)
+	}
+}
+
 func testSystems(t *testing.T, queryString string, account int) SystemsResponse {
 	core.SetupTest(t)
 	w := CreateRequestRouterWithAccount("GET", "/", "", queryString, nil, "", SystemsListHandler, account)
